@@ -131,6 +131,12 @@ a{color:inherit}
 .art .detail .meta{font-size:12px;color:var(--muted);margin-bottom:4px}
 .art .go{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;margin-top:6px;background:var(--navy);color:#fff;text-decoration:none;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;transition:.18s}
 .art .go:hover{background:var(--gold);color:var(--navy)}
+.nav .back{text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:8px 14px;color:var(--navy);font-weight:600;font-size:14px}
+.nav .back:hover{border-color:var(--gold-2);background:var(--gold-bg)}
+.cites{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.citebtn{border:1px solid var(--line);background:var(--card);color:var(--navy);font:inherit;font-size:12px;font-weight:600;padding:7px 12px;border-radius:9px;cursor:pointer;transition:.18s}
+.citebtn:hover{border-color:var(--gold-2);background:var(--gold-bg)}
+.citebtn.ok{background:var(--navy);color:#fff;border-color:var(--navy)}
 .empty{padding:60px;text-align:center;color:var(--muted)}
 
 footer{border-top:1px solid var(--line);margin-top:30px;padding:30px 0;color:var(--muted);font-size:13px}
@@ -154,6 +160,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
       <span class="bt"><b>GEPAEd</b><span>Biblioteca científica</span></span>
     </button>
     <nav class="nav">
+      <a class="back" href="https://gabrielfortes-nees.github.io/gepaed-site/">← Site do GEPAEd</a>
       <button onclick="goHome()">Início</button>
       <button onclick="openMode('temas')">Explorar</button>
       <button onclick="scrollHow()">Como usar</button>
@@ -173,7 +180,7 @@ const META = window.GEPAED_META || {};
 const norm = s => (s||"").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 const hi = q => ["A1","A2"].includes(q);
 const arr = x => x==null?[]:Array.isArray(x)?x:[x];   // R auto_unbox vira escalar em listas de 1 item
-A.forEach(a=>{["autores","estudantes","temas","disciplina"].forEach(k=>a[k]=arr(a[k]))});
+A.forEach(a=>{["autores","autores_todos","estudantes","temas","disciplina"].forEach(k=>a[k]=arr(a[k]))});
 A.forEach((a,i)=>{a._i=i;a._s=norm([a.titulo,a.autores.join(" "),a.estudantes.join(" "),a.periodico,a.temas.join(" "),a.disciplina.join(" ")].join(" "))});
 
 // ---- estado ----
@@ -332,8 +339,30 @@ function cardHTML(a){
      <div class="meta"><b>Tipo:</b> ${a.tipo||"—"} · <b>Idioma:</b> ${a.idioma} · <b>Área:</b> ${a.area||"—"}</div>
      ${a.doi?`<div class="meta"><b>DOI:</b> ${a.doi}</div>`:''}
      ${a.link?`<a class="go" href="${a.link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Acessar artigo →</a>`:''}
+     <div class="cites">
+       <button class="citebtn" onclick="event.stopPropagation();copiarCitacao(${a._i},'abnt',this)">Copiar citação ABNT</button>
+       <button class="citebtn" onclick="event.stopPropagation();copiarCitacao(${a._i},'apa',this)">Copiar citação APA</button>
+     </div>
    </div>
  </article>`;
+}
+function autoresArr(a){return (a.autores_todos&&a.autores_todos.length)?a.autores_todos:(a.autores||[]);}
+function citaABNT(a){
+ const aut=autoresArr(a).map(n=>{const w=String(n).trim().split(/\s+/);const last=w.pop()||"";const first=w.join(" ");return last.toUpperCase()+(first?", "+first:"");}).join("; ");
+ let s=(aut?aut+". ":"")+a.titulo+". "+(a.periodico?a.periodico+", ":"")+a.ano+".";
+ if(a.doi) s+=" DOI: "+a.doi+"."; else if(a.link) s+=" Disponível em: "+a.link+".";
+ return s;
+}
+function citaAPA(a){
+ const fmt=autoresArr(a).map(n=>{const w=String(n).trim().split(/\s+/);const last=w.pop()||"";const inits=w.map(x=>x[0]?x[0].toUpperCase()+".":"").join(" ");return last+(inits?", "+inits:"");});
+ const aut=fmt.length>1?fmt.slice(0,-1).join(", ")+", & "+fmt[fmt.length-1]:(fmt[0]||"");
+ let s=(aut?aut+" ":"")+"("+a.ano+"). "+a.titulo+". "+(a.periodico?a.periodico+".":"");
+ if(a.doi) s+=" https://doi.org/"+a.doi;
+ return s.trim();
+}
+function copiarCitacao(i,estilo,btn){
+ const a=A[i];const txt=estilo==="abnt"?citaABNT(a):citaAPA(a);
+ navigator.clipboard.writeText(txt).then(()=>{const o=btn.textContent;btn.textContent="✓ Copiado!";btn.classList.add("ok");setTimeout(()=>{btn.textContent=o;btn.classList.remove("ok");},1600);});
 }
 function exportCSV(){
  const list=A.filter(matches);
