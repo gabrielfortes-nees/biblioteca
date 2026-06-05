@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biblioteca GEPAEd — Produção Científica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF8F1; --navy:#15263F; --navy2:#22406B; --gold:#BE8F2C; --gold-2:#D8B65A;
+  --gold-soft:#EFE0B6; --gold-bg:#F7EFD9; --ink:#26303E; --muted:#6B7480;
+  --line:#EAE3D3; --card:#FFFFFF; --shadow:0 6px 24px rgba(21,38,63,.07);
+  --shadow-h:0 14px 40px rgba(21,38,63,.13); --r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:Fraunces,Georgia,serif}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(251,248,241,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:12px;cursor:pointer;border:0;background:none}
+.brand .logo{height:36px;width:auto;flex:none;display:block}
+.brand .bt{display:flex;flex-direction:column;line-height:1.05;text-align:left}
+.brand .bt b{font-family:Fraunces;font-weight:700;color:var(--navy);font-size:19px;letter-spacing:.3px}
+.brand .bt span{font-size:10.5px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+.nav{display:flex;gap:6px}
+.nav button{border:0;background:none;color:var(--navy);font:inherit;font-size:14px;padding:8px 14px;border-radius:10px;cursor:pointer;transition:.18s}
+.nav button:hover{background:var(--gold-bg)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding:64px 0 36px}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(900px 380px at 78% -10%,rgba(216,182,90,.20),transparent 60%);pointer-events:none}
+.eyebrow{display:inline-block;color:var(--gold);font-weight:600;font-size:12.5px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.hero h1{font-size:clamp(34px,5.4vw,58px);font-weight:600;color:var(--navy);letter-spacing:-.5px;line-height:1.04}
+.hero p.lead{margin-top:16px;max-width:620px;font-size:18px;color:var(--muted)}
+.search{margin-top:30px;max-width:580px;display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:6px 6px 6px 20px;box-shadow:var(--shadow);transition:.2s}
+.search:focus-within{border-color:var(--gold-2);box-shadow:0 8px 30px rgba(190,143,44,.16)}
+.search svg{flex:none;color:var(--muted)}
+.search input{flex:1;border:0;outline:0;font:inherit;font-size:16px;background:none;color:var(--ink)}
+.search button{flex:none;border:0;background:var(--navy);color:#fff;font:inherit;font-weight:600;padding:11px 22px;border-radius:999px;cursor:pointer;transition:.18s}
+.search button:hover{background:var(--navy2)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:40px 0 8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;box-shadow:var(--shadow)}
+.stat b{display:block;font-family:Fraunces;font-size:32px;font-weight:700;color:var(--navy);line-height:1}
+.stat span{font-size:13px;color:var(--muted)}
+
+/* section */
+.section{padding:30px 0}
+.section h2{font-size:26px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.section .sub{color:var(--muted);margin-bottom:24px;font-size:15px}
+
+/* mode cards */
+.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.mode{position:relative;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;cursor:pointer;transition:.22s;box-shadow:var(--shadow);overflow:hidden}
+.mode:hover{transform:translateY(-4px);box-shadow:var(--shadow-h);border-color:var(--gold-2)}
+.mode .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--gold-bg);color:var(--gold);margin-bottom:16px;transition:.22s}
+.mode:hover .ic{background:var(--navy);color:var(--gold-2)}
+.mode h3{font-size:18px;color:var(--navy);margin-bottom:5px;font-weight:600}
+.mode p{font-size:13.5px;color:var(--muted)}
+.mode .cnt{position:absolute;top:18px;right:20px;font-size:12px;color:var(--gold);font-weight:600}
+
+/* how to */
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:8px}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--navy);color:var(--gold-2);font-family:Fraunces;font-weight:700;display:grid;place-items:center}
+.step h4{color:var(--navy);font-size:15px;margin-bottom:2px}
+.step p{font-size:13.5px;color:var(--muted)}
+
+/* breadcrumb */
+.crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);padding:26px 0 4px}
+.crumb button{border:0;background:none;color:var(--gold);font:inherit;cursor:pointer;padding:0;font-weight:600}
+.crumb .sep{opacity:.5}
+
+/* facet cards */
+.facet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;padding:10px 0 40px}
+.facet{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;cursor:pointer;transition:.2s;box-shadow:var(--shadow)}
+.facet:hover{transform:translateY(-3px);box-shadow:var(--shadow-h);border-color:var(--gold-2)}
+.facet .fn{color:var(--navy);font-weight:600;font-size:15px}
+.facet .fc{background:var(--gold-bg);color:var(--gold);font-weight:700;font-size:13px;border-radius:999px;padding:3px 11px;flex:none}
+
+/* results layout */
+.results{display:grid;grid-template-columns:262px 1fr;gap:28px;padding:8px 0 60px;align-items:start}
+.filters{position:sticky;top:88px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:8px 4px;box-shadow:var(--shadow)}
+.fgroup{border-bottom:1px solid var(--line)}
+.fgroup:last-child{border-bottom:0}
+.fgroup>summary{list-style:none;cursor:pointer;padding:13px 18px;font-weight:600;color:var(--navy);font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.fgroup>summary::-webkit-details-marker{display:none}
+.fgroup>summary::after{content:"+";color:var(--gold);font-size:18px}
+.fgroup[open]>summary::after{content:"–"}
+.fopts{padding:2px 18px 14px;max-height:240px;overflow:auto}
+.fopt{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--ink);padding:5px 0;cursor:pointer}
+.fopt input{accent-color:var(--gold);width:15px;height:15px}
+.fopt .oc{margin-left:auto;color:var(--muted);font-size:12px}
+.clearf{width:100%;text-align:left;border:0;background:none;color:var(--gold);font:inherit;font-weight:600;font-size:13px;padding:12px 18px;cursor:pointer}
+
+.rhead{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.rhead .cnt{color:var(--navy);font-weight:600;font-size:15px}
+.rhead .tools{display:flex;gap:10px;align-items:center}
+.rhead select,.rhead .exp{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;font:inherit;font-size:13px;color:var(--ink);cursor:pointer}
+.rhead .exp{color:var(--navy);font-weight:600}
+.rhead .exp:hover{border-color:var(--gold-2)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 16px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--gold-bg);color:#8a6a17;border:1px solid var(--gold-soft);border-radius:999px;padding:5px 8px 5px 12px;font-size:12.5px;font-weight:500}
+.chip button{border:0;background:none;cursor:pointer;color:#8a6a17;font-size:15px;line-height:1;padding:0 2px}
+
+/* article cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
+.art{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px 20px 16px;box-shadow:var(--shadow);transition:.2s;display:flex;flex-direction:column;cursor:pointer}
+.art:hover{box-shadow:var(--shadow-h);border-color:var(--gold-soft)}
+.art .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.art .yr{font-size:13px;color:var(--muted);font-weight:500}
+.qbadge{font-size:11.5px;font-weight:700;border-radius:7px;padding:3px 9px;background:#EEF1F5;color:#5a6675}
+.qbadge.hi{background:var(--navy);color:var(--gold-2)}
+.art h3{font-family:Inter;font-size:15.5px;font-weight:600;color:var(--navy);line-height:1.32;margin-bottom:9px}
+.art .au{font-size:13px;color:var(--ink);margin-bottom:3px}
+.art .pe{font-size:12.5px;color:var(--muted);font-style:italic;margin-bottom:12px}
+.art .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.tag{font-size:11px;background:var(--gold-bg);color:#8a6a17;border-radius:6px;padding:2px 8px}
+.tag.alt{background:#EEF1F5;color:#5a6675}
+.art .detail{max-height:0;overflow:hidden;transition:max-height .3s ease;border-top:1px solid transparent}
+.art.open .detail{max-height:600px;border-top-color:var(--line);margin-top:14px;padding-top:14px}
+.art .detail p{font-size:13px;color:var(--ink);margin-bottom:10px}
+.art .detail .meta{font-size:12px;color:var(--muted);margin-bottom:4px}
+.art .go{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;margin-top:6px;background:var(--navy);color:#fff;text-decoration:none;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;transition:.18s}
+.art .go:hover{background:var(--gold);color:var(--navy)}
+.empty{padding:60px;text-align:center;color:var(--muted)}
+
+footer{border-top:1px solid var(--line);margin-top:30px;padding:30px 0;color:var(--muted);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+@media(max-width:880px){
+  .stats,.modes{grid-template-columns:repeat(2,1fr)}
+  .how{grid-template-columns:1fr}
+  .results{grid-template-columns:1fr}
+  .filters{position:static}
+}
+.fade{animation:fade .45s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <button class="brand" onclick="goHome()">
+      <img class="logo" src="img/logo_simbolo.png" alt="GEPAEd">
+      <span class="bt"><b>GEPAEd</b><span>Biblioteca científica</span></span>
+    </button>
+    <nav class="nav">
+      <button onclick="goHome()">Início</button>
+      <button onclick="openMode('temas')">Explorar</button>
+      <button onclick="scrollHow()">Como usar</button>
+    </nav>
+  </div>
+</header>
+<main id="app"></main>
+<footer><div class="wrap">
+  <img src="img/logo_full.png" alt="GEPAEd — Grupo de Estudo e Pesquisa em Argumentação na Educação" style="height:62px;width:auto">
+  <span id="foot-count"></span>
+</div></footer>
+
+<script src="data.js"></script>
+<script>
+const A = window.GEPAED_ARTIGOS || [];
+const META = window.GEPAED_META || {};
+const norm = s => (s||"").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+const hi = q => ["A1","A2"].includes(q);
+const arr = x => x==null?[]:Array.isArray(x)?x:[x];   // R auto_unbox vira escalar em listas de 1 item
+A.forEach(a=>{["autores","estudantes","temas","disciplina"].forEach(k=>a[k]=arr(a[k]))});
+A.forEach((a,i)=>{a._i=i;a._s=norm([a.titulo,a.autores.join(" "),a.estudantes.join(" "),a.periodico,a.temas.join(" "),a.disciplina.join(" ")].join(" "))});
+
+// ---- estado ----
+let state={view:"home",facet:null,filters:{busca:"",temas:new Set(),area:new Set(),tipo:new Set(),idioma:new Set(),disciplina:new Set(),autores:new Set(),ano:new Set()},sort:"ano-desc"};
+const FACETS={
+  temas:{label:"Tema",field:a=>a.temas,desc:"Linhas temáticas da produção"},
+  autores:{label:"Autor",field:a=>(a.autores||[]).concat(a.estudantes||[]),desc:"Pesquisadores e estudantes"},
+  ano:{label:"Ano",field:a=>[String(a.ano)],desc:"Linha do tempo da produção"},
+  area:{label:"Área",field:a=>a.area?[a.area]:[],desc:"Campo do conhecimento"}
+};
+const app=document.getElementById("app");
+document.getElementById("foot-count").textContent=A.length+" artigos · "+META.ano_min+"–"+META.ano_max;
+
+const ICON={
+ temas:'<svg width=22 height=22 fill=none stroke=currentColor stroke-width=1.7><path d="M3 7l8-4 8 4-8 4z"/><path d="M3 12l8 4 8-4M3 16.5l8 4 8-4" opacity=.5/></svg>',
+ autores:'<svg width=22 height=22 fill=none stroke=currentColor stroke-width=1.7><circle cx=11 cy=7 r=3.4/><path d="M4 19c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>',
+ ano:'<svg width=22 height=22 fill=none stroke=currentColor stroke-width=1.7><rect x=3.5 y=5 width=15 height=14 rx=2.5/><path d="M3.5 9h15M8 3v4M14 3v4"/></svg>',
+ area:'<svg width=22 height=22 fill=none stroke=currentColor stroke-width=1.7><rect x=3.5 y=3.5 width=6.5 height=6.5 rx=1.5/><rect x=12 y=3.5 width=6.5 height=6.5 rx=1.5/><rect x=3.5 y=12 width=6.5 height=6.5 rx=1.5/><rect x=12 y=12 width=6.5 height=6.5 rx=1.5/></svg>',
+ search:'<svg width=20 height=20 fill=none stroke=currentColor stroke-width=2><circle cx=9 cy=9 r=6/><path d="M14 14l5 5"/></svg>'
+};
+
+// ---- HOME ----
+function goHome(){state.view="home";render();window.scrollTo(0,0)}
+function homeHTML(){
+ const counts=Object.fromEntries(Object.keys(FACETS).map(k=>[k,new Set(A.flatMap(FACETS[k].field)).size]));
+ return `
+ <section class="hero"><div class="wrap fade">
+   <span class="eyebrow">Argumentação na Educação</span>
+   <h1>Biblioteca de produção<br>científica do GEPAEd</h1>
+   <p class="lead">Explore os artigos publicados pelo grupo: navegue por tema, autor ou ano, refine com filtros e acesse cada trabalho na fonte.</p>
+   <div class="search">${ICON.search}
+     <input id="q" placeholder="Buscar por título, autor, periódico ou tema…" onkeydown="if(event.key==='Enter')doSearch()">
+     <button onclick="doSearch()">Buscar</button>
+   </div>
+   <div class="stats">
+     <div class="stat"><b>${META.n_artigos}</b><span>artigos em periódicos</span></div>
+     <div class="stat"><b>${META.n_pesquisadores}</b><span>pesquisadores</span></div>
+     <div class="stat"><b>${META.ano_min}–${META.ano_max}</b><span>período coberto</span></div>
+     <div class="stat"><b>${META.n_periodicos}</b><span>periódicos</span></div>
+   </div>
+ </div></section>
+ <section class="section"><div class="wrap">
+   <h2>Por onde começar?</h2><p class="sub">Escolha um caminho de navegação. As opções se abrem conforme você avança.</p>
+   <div class="modes">${Object.keys(FACETS).map(k=>`
+     <button class="mode fade" onclick="openMode('${k}')">
+       <span class="cnt">${counts[k]}</span>
+       <div class="ic">${ICON[k]}</div>
+       <h3>Por ${FACETS[k].label}</h3><p>${FACETS[k].desc}</p>
+     </button>`).join("")}</div>
+ </div></section>
+ <section class="section" id="how"><div class="wrap">
+   <h2>Como usar</h2><p class="sub">Três passos simples.</p>
+   <div class="how">
+     <div class="step fade"><div class="n">1</div><div><h4>Escolha um caminho</h4><p>Comece por tema, autor, ano ou área — ou use a busca livre.</p></div></div>
+     <div class="step fade"><div class="n">2</div><div><h4>Refine</h4><p>Combine filtros na lateral para chegar exatamente no que procura.</p></div></div>
+     <div class="step fade"><div class="n">3</div><div><h4>Acesse ou exporte</h4><p>Clique num artigo para ver o resumo e o link, ou exporte a seleção.</p></div></div>
+   </div>
+ </div></section>`;
+}
+
+// ---- FACET (valores de uma dimensão) ----
+function openMode(f){state.view="facet";state.facet=f;render();window.scrollTo(0,0)}
+function facetHTML(){
+ const f=FACETS[state.facet];
+ const m={};A.forEach(a=>f.field(a).forEach(v=>{if(v&&v!=="")m[v]=(m[v]||0)+1}));
+ let items=Object.entries(m);
+ items.sort(state.facet==="ano"?(a,b)=>b[0]-a[0]:(a,b)=>b[1]-a[1]);
+ return `<div class="wrap">
+   <div class="crumb"><button onclick="goHome()">Início</button><span class="sep">›</span><span>Por ${f.label}</span></div>
+   <section class="section" style="padding-top:6px"><h2>Explorar por ${f.label.toLowerCase()}</h2>
+   <p class="sub">${items.length} opções · clique para ver os artigos.</p>
+   <div class="facet-grid">${items.map(([v,c])=>`
+     <button class="facet fade" onclick="pickFacet('${state.facet}',${JSON.stringify(v).replace(/"/g,'&quot;')})">
+       <span class="fn">${v}</span><span class="fc">${c}</span></button>`).join("")}</div>
+   </section></div>`;
+}
+function pickFacet(f,v){
+ Object.values(state.filters).forEach(x=>x.clear&&x.clear());state.filters.busca="";
+ const map={temas:"temas",area:"area",ano:"ano",autores:"autores"};
+ state.filters[map[f]].add(v);state.view="results";render();window.scrollTo(0,0);
+}
+function doSearch(){const q=document.getElementById("q").value;clearFilters();state.filters.busca=q;state.view="results";render();window.scrollTo(0,0)}
+function clearFilters(){state.filters.busca="";["temas","area","tipo","idioma","disciplina","autores","ano"].forEach(k=>state.filters[k].clear())}
+
+// ---- RESULTS ----
+function matches(a){
+ const f=state.filters;
+ if(f.busca&&!a._s.includes(norm(f.busca)))return false;
+ if(f.temas.size&&!(a.temas||[]).some(t=>f.temas.has(t)))return false;
+ if(f.disciplina.size&&!(a.disciplina||[]).some(t=>f.disciplina.has(t)))return false;
+ if(f.area.size&&!f.area.has(a.area))return false;
+ if(f.tipo.size&&!f.tipo.has(a.tipo))return false;
+ if(f.idioma.size&&!f.idioma.has(a.idioma))return false;
+ if(f.ano.size&&!f.ano.has(String(a.ano)))return false;
+ if(f.autores.size&&!((a.autores||[]).concat(a.estudantes||[])).some(t=>f.autores.has(t)))return false;
+ return true;
+}
+function facetCounts(field,base){const m={};base.forEach(a=>field(a).forEach(v=>{if(v&&v!=="")m[v]=(m[v]||0)+1}));return m}
+function fgroup(title,key,field,opts){
+ const sel=state.filters[key];
+ const entries=Object.entries(opts).sort(key==="ano"?(a,b)=>b[0]-a[0]:(a,b)=>b[1]-a[1]);
+ if(!entries.length)return"";
+ return `<details class="fgroup" ${sel.size?'open':''}><summary>${title}${sel.size?` <span style="color:var(--gold)">(${sel.size})</span>`:''}</summary>
+  <div class="fopts">${entries.map(([v,c])=>`<label class="fopt"><input type="checkbox" ${sel.has(v)?'checked':''} onchange="toggleF('${key}',${JSON.stringify(v).replace(/"/g,'&quot;')})">${v}<span class="oc">${c}</span></label>`).join("")}</div></details>`;
+}
+function toggleF(key,v){const s=state.filters[key];s.has(v)?s.delete(v):s.add(v);render()}
+function resultsHTML(){
+ const list=A.filter(matches);
+ list.sort((a,b)=> state.sort==="ano-asc"?a.ano-b.ano : state.sort==="qualis"?(qrank(a.qualis)-qrank(b.qualis)) : b.ano-a.ano);
+ const base=A; // contagens sobre o total para orientar
+ const chips=[];
+ ["temas","disciplina","area","tipo","idioma","autores","ano"].forEach(k=>state.filters[k].forEach(v=>chips.push([k,v])));
+ if(state.filters.busca)chips.unshift(["busca",state.filters.busca]);
+ return `<div class="wrap">
+  <div class="crumb"><button onclick="goHome()">Início</button><span class="sep">›</span><span>Resultados</span></div>
+  <div class="results">
+   <aside class="filters">
+     ${fgroup("Tema","temas",a=>a.temas,facetCounts(a=>a.temas,base))}
+     ${fgroup("Disciplina","disciplina",a=>a.disciplina,facetCounts(a=>a.disciplina,base))}
+     ${fgroup("Área","area",a=>a.area?[a.area]:[],facetCounts(a=>a.area?[a.area]:[],base))}
+     ${fgroup("Tipo","tipo",a=>a.tipo?[a.tipo]:[],facetCounts(a=>a.tipo?[a.tipo]:[],base))}
+     ${fgroup("Idioma","idioma",a=>a.idioma?[a.idioma]:[],facetCounts(a=>a.idioma?[a.idioma]:[],base))}
+     ${fgroup("Autor","autores",a=>(a.autores||[]).concat(a.estudantes||[]),facetCounts(a=>(a.autores||[]).concat(a.estudantes||[]),base))}
+     ${fgroup("Ano","ano",a=>[String(a.ano)],facetCounts(a=>[String(a.ano)],base))}
+     <button class="clearf" onclick="clearFilters();render()">↺ Limpar filtros</button>
+   </aside>
+   <div>
+     <div class="rhead">
+       <span class="cnt">${list.length} artigo${list.length!=1?'s':''}</span>
+       <div class="tools">
+         <select onchange="state.sort=this.value;render()">
+           <option value="ano-desc" ${state.sort==='ano-desc'?'selected':''}>Mais recentes</option>
+           <option value="ano-asc" ${state.sort==='ano-asc'?'selected':''}>Mais antigos</option>
+           <option value="qualis" ${state.sort==='qualis'?'selected':''}>Maior Qualis</option>
+         </select>
+         <button class="exp" onclick="exportCSV()">↓ Exportar CSV</button>
+       </div>
+     </div>
+     ${chips.length?`<div class="chips">${chips.map(([k,v])=>`<span class="chip">${v}<button onclick="rmChip('${k}',${JSON.stringify(v).replace(/"/g,'&quot;')})">×</button></span>`).join("")}</div>`:''}
+     ${list.length?`<div class="cards">${list.map(cardHTML).join("")}</div>`:`<div class="empty">Nenhum artigo encontrado. Tente remover algum filtro.</div>`}
+   </div>
+  </div></div>`;
+}
+function qrank(q){return {"A1":1,"A2":2,"A3":3,"A4":4,"B1":5,"B2":6,"B4":7,"C":8}[q]||9}
+function rmChip(k,v){if(k==="busca")state.filters.busca="";else state.filters[k].delete(v);render()}
+function cardHTML(a){
+ return `<article class="art fade" onclick="this.classList.toggle('open')">
+   <div class="top"><span class="yr">${a.ano}</span><span class="qbadge ${hi(a.qualis)?'hi':''}">${a.qualis}</span></div>
+   <h3>${a.titulo}</h3>
+   <div class="au">${(a.autores||[]).join(" · ")||"—"}</div>
+   <div class="pe">${a.periodico||""}</div>
+   <div class="tags">${(a.temas||[]).slice(0,3).map(t=>`<span class="tag">${t}</span>`).join("")}${a.disciplina&&a.disciplina.length?`<span class="tag alt">${a.disciplina.join(", ")}</span>`:''}</div>
+   <div class="detail">
+     ${a.resumo?`<p>${a.resumo.slice(0,420)}${a.resumo.length>420?'…':''}</p>`:'<p style="color:var(--muted)">Resumo não disponível.</p>'}
+     ${a.estudantes&&a.estudantes.length?`<div class="meta"><b>Estudantes co-autores:</b> ${a.estudantes.join(", ")}</div>`:''}
+     <div class="meta"><b>Tipo:</b> ${a.tipo||"—"} · <b>Idioma:</b> ${a.idioma} · <b>Área:</b> ${a.area||"—"}</div>
+     ${a.doi?`<div class="meta"><b>DOI:</b> ${a.doi}</div>`:''}
+     ${a.link?`<a class="go" href="${a.link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Acessar artigo →</a>`:''}
+   </div>
+ </article>`;
+}
+function exportCSV(){
+ const list=A.filter(matches);
+ const cols=["ano","titulo","autores","periodico","qualis","area","temas","disciplina","tipo","idioma","doi","link"];
+ const esc=v=>'"'+String(Array.isArray(v)?v.join("; "):v||"").replace(/"/g,'""')+'"';
+ const csv=[cols.join(",")].concat(list.map(a=>cols.map(c=>esc(a[c])).join(","))).join("\n");
+ const b=new Blob(["﻿"+csv],{type:"text/csv"});const u=URL.createObjectURL(b);
+ const x=document.createElement("a");x.href=u;x.download="biblioteca_gepaed.csv";x.click();URL.revokeObjectURL(u);
+}
+function scrollHow(){if(state.view!=="home"){goHome();setTimeout(()=>document.getElementById("how")?.scrollIntoView(),60)}else document.getElementById("how")?.scrollIntoView()}
+
+function render(){
+ app.innerHTML = state.view==="home"?homeHTML() : state.view==="facet"?facetHTML() : resultsHTML();
+}
+render();
+</script>
+</body>
+</html>
