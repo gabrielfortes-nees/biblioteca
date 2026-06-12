@@ -255,7 +255,7 @@ function facetHTML(){
  const f=FACETS[state.facet];
  const m={};A.forEach(a=>f.field(a).forEach(v=>{if(v&&v!=="")m[v]=(m[v]||0)+1}));
  let items=Object.entries(m);
- items.sort(state.facet==="ano"?(a,b)=>b[0]-a[0]:(a,b)=>b[1]-a[1]);
+ items.sort(state.facet==="ano"?(a,b)=>b[0]-a[0]:state.facet==="autores"?(a,b)=>a[0].localeCompare(b[0],"pt"):(a,b)=>b[1]-a[1]);
  return `<div class="wrap">
    <div class="crumb"><button onclick="goHome()">Início</button><span class="sep">›</span><span>Por ${f.label}</span></div>
    <section class="section" style="padding-top:6px"><h2>Explorar por ${f.label.toLowerCase()}</h2>
@@ -289,7 +289,7 @@ function matches(a){
 function facetCounts(field,base){const m={};base.forEach(a=>field(a).forEach(v=>{if(v&&v!=="")m[v]=(m[v]||0)+1}));return m}
 function fgroup(title,key,field,opts){
  const sel=state.filters[key];
- const entries=Object.entries(opts).sort(key==="ano"?(a,b)=>b[0]-a[0]:(a,b)=>b[1]-a[1]);
+ const entries=Object.entries(opts).sort(key==="ano"?(a,b)=>b[0]-a[0]:key==="autores"?(a,b)=>a[0].localeCompare(b[0],"pt"):(a,b)=>b[1]-a[1]);
  if(!entries.length)return"";
  return `<details class="fgroup" ${sel.size?'open':''}><summary>${title}${sel.size?` <span style="color:var(--gold)">(${sel.size})</span>`:''}</summary>
   <div class="fopts">${entries.map(([v,c])=>`<label class="fopt"><input type="checkbox" ${sel.has(v)?'checked':''} onchange="toggleF('${key}',${JSON.stringify(v).replace(/"/g,'&quot;')})">${v}<span class="oc">${c}</span></label>`).join("")}</div></details>`;
