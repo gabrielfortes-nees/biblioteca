@@ -211,7 +211,7 @@ const ICON={
 };
 
 // ---- HOME ----
-function goHome(){state.view="home";render();window.scrollTo(0,0)}
+function goHome(){state.view="home";pushHist();render();window.scrollTo(0,0)}
 function homeHTML(){
  const counts=Object.fromEntries(Object.keys(FACETS).map(k=>[k,new Set(A.flatMap(FACETS[k].field)).size]));
  return `
@@ -250,7 +250,7 @@ function homeHTML(){
 }
 
 // ---- FACET (valores de uma dimensão) ----
-function openMode(f){state.view="facet";state.facet=f;render();window.scrollTo(0,0)}
+function openMode(f){state.view="facet";state.facet=f;pushHist();render();window.scrollTo(0,0)}
 function facetHTML(){
  const f=FACETS[state.facet];
  const m={};A.forEach(a=>f.field(a).forEach(v=>{if(v&&v!=="")m[v]=(m[v]||0)+1}));
@@ -268,9 +268,9 @@ function facetHTML(){
 function pickFacet(f,v){
  Object.values(state.filters).forEach(x=>x.clear&&x.clear());state.filters.busca="";
  const map={temas:"temas",area:"area",ano:"ano",autores:"autores"};
- state.filters[map[f]].add(v);state.view="results";render();window.scrollTo(0,0);
+ state.filters[map[f]].add(v);state.view="results";pushHist();render();window.scrollTo(0,0);
 }
-function doSearch(){const q=document.getElementById("q").value;clearFilters();state.filters.busca=q;state.view="results";render();window.scrollTo(0,0)}
+function doSearch(){const q=document.getElementById("q").value;clearFilters();state.filters.busca=q;state.view="results";pushHist();render();window.scrollTo(0,0)}
 function clearFilters(){state.filters.busca="";["temas","area","tipo","idioma","disciplina","autores","ano"].forEach(k=>state.filters[k].clear())}
 
 // ---- RESULTS ----
@@ -385,7 +385,13 @@ function scrollHow(){if(state.view!=="home"){goHome();setTimeout(()=>document.ge
 function render(){
  app.innerHTML = state.view==="home"?homeHTML() : state.view==="facet"?facetHTML() : resultsHTML();
 }
+// histórico para o botão "voltar" do navegador funcionar entre as telas
+function snapState(){return {v:state.view,f:state.facet,sort:state.sort,busca:state.filters.busca,sets:Object.fromEntries(["temas","area","tipo","idioma","disciplina","autores","ano"].map(k=>[k,[...state.filters[k]]]))};}
+function pushHist(){history.pushState(snapState(),"");}
+function restoreState(s){state.view=s.v;state.facet=s.f;state.sort=s.sort||"ano-desc";state.filters.busca=s.busca||"";["temas","area","tipo","idioma","disciplina","autores","ano"].forEach(k=>state.filters[k]=new Set((s.sets&&s.sets[k])||[]));render();window.scrollTo(0,0);}
+window.addEventListener("popstate",e=>{if(e.state)restoreState(e.state);});
 render();
+history.replaceState(snapState(),"");
 </script>
 </body>
 </html>
